@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0F2942">
+<title>Kepadatan Bilik Darjah · JPN Kedah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TEMA NAVY · BRASS · GOLD — JPN Kedah
+   ============================================================ */
+:root{
+  --abyss:#08172A;
+  --navy:#0F2942;
+  --navy-lift:#16334F;
+  --navy-line:#1E4066;
+  --brass:#B8860B;
+  --gold:#D4AF37;
+  --cream:#F2EDE3;
+  --muted:#8FA3B8;
+
+  --biru:#3B82F6;
+  --hijau:#16A34A;
+  --kuning:#EAB308;
+  --oren:#EA580C;
+  --merah:#DC2626;
+
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --serif:'Fraunces',Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+
+  --r:4px;
+  --pad:22px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:var(--sans);
+  background:var(--navy);
+  color:var(--cream);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- MOTIF BAY: garis 3-bay pada latar ---------- */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:repeating-linear-gradient(90deg,
+    rgba(184,134,11,.055) 0 1px, transparent 1px 33.333vw);
+}
+
+a{color:var(--gold);text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ============================================================
+   BANNER MOD DEMO
+   ============================================================ */
+#banner-demo{
+  position:sticky;top:0;z-index:50;display:none;
+  background:var(--merah);color:#fff;
+  padding:8px 16px;text-align:center;
+  font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+}
+#banner-demo.on{display:block}
+
+/* ============================================================
+   RANGKA
+   ============================================================ */
+.rangka{display:flex;min-height:100vh;position:relative;z-index:1}
+
+/* ---------- SIDEBAR ---------- */
+aside{
+  width:250px;flex-shrink:0;
+  background:var(--abyss);
+  border-right:1px solid var(--navy-line);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;
+}
+
+.jata{padding:26px var(--pad) 20px;border-bottom:1px solid var(--navy-line)}
+.jata .eyebrow{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;
+  color:var(--brass);text-transform:uppercase;margin-bottom:9px;
+}
+.jata h1{
+  font-family:var(--serif);font-weight:600;font-size:21px;
+  line-height:1.16;color:var(--cream);
+  font-variation-settings:'opsz' 40;
+}
+.jata .versi{
+  font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px;
+}
+
+nav{padding:14px 10px;flex:1;overflow-y:auto}
+nav button{
+  display:flex;align-items:center;gap:11px;width:100%;
+  background:none;border:none;color:var(--muted);
+  padding:10px 12px;border-radius:var(--r);
+  font-size:14px;font-weight:500;text-align:left;
+  border-left:2px solid transparent;transition:.16s;
+}
+nav button:hover{background:var(--navy-lift);color:var(--cream)}
+nav button.aktif{
+  background:var(--navy-lift);color:var(--gold);
+  border-left-color:var(--brass);font-weight:600;
+}
+nav button .num{
+  font-family:var(--mono);font-size:10px;color:var(--brass);
+  min-width:15px;
+}
+nav .fasa{
+  margin-left:auto;font-family:var(--mono);font-size:9px;
+  color:var(--brass);border:1px solid var(--navy-line);
+  padding:1px 5px;border-radius:2px;
+}
+
+.sidebar-kaki{
+  padding:14px var(--pad);border-top:1px solid var(--navy-line);
+  font-family:var(--mono);font-size:10px;color:var(--muted);
+  display:flex;align-items:center;gap:7px;
+}
+.lampu{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.lampu.ok{background:var(--hijau);box-shadow:0 0 7px var(--hijau)}
+.lampu.gagal{background:var(--merah)}
+
+/* ---------- KANDUNGAN ---------- */
+main{flex:1;min-width:0;padding:30px 34px 60px}
+
+.tajuk-halaman{
+  border-bottom:1px solid var(--navy-line);
+  padding-bottom:16px;margin-bottom:26px;
+}
+.tajuk-halaman .eyebrow{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  color:var(--brass);text-transform:uppercase;margin-bottom:7px;
+}
+.tajuk-halaman h2{
+  font-family:var(--serif);font-weight:600;font-size:30px;
+  line-height:1.1;font-variation-settings:'opsz' 90;
+}
+.tajuk-halaman p{color:var(--muted);font-size:13.5px;margin-top:7px;max-width:64ch}
+
+.halaman{display:none}
+.halaman.aktif{display:block}
+
+/* ============================================================
+   KAD KPI
+   ============================================================ */
+.grid-kpi{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));
+  gap:13px;margin-bottom:26px;
+}
+.kad{
+  background:var(--navy-lift);
+  border:1px solid var(--navy-line);
+  border-radius:var(--r);padding:17px 18px;
+  position:relative;overflow:hidden;
+}
+.kad::after{
+  content:'';position:absolute;top:0;left:0;width:100%;height:2px;
+  background:linear-gradient(90deg,var(--brass),var(--gold));
+  opacity:.55;
+}
+.kad .label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:9px;
+}
+.kad .angka{
+  font-family:var(--serif);font-weight:600;font-size:33px;
+  line-height:1;color:var(--cream);font-variation-settings:'opsz' 100;
+}
+.kad .angka.kecil{font-size:25px}
+.kad .unit{font-family:var(--sans);font-size:13px;color:var(--muted);font-weight:500}
+.kad .sub{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+.kad.amaran::after{background:linear-gradient(90deg,var(--oren),var(--merah));opacity:.8}
+.kad.amaran .angka{color:var(--oren)}
+
+/* ============================================================
+   SIGNATURE: PENGUKUR BAY
+   ============================================================ */
+.panel-bay{
+  background:var(--abyss);border:1px solid var(--navy-line);
+  border-radius:var(--r);padding:22px var(--pad);margin-bottom:26px;
+}
+.panel-bay h3{
+  font-family:var(--serif);font-size:17px;font-weight:600;margin-bottom:5px;
+}
+.panel-bay .nota{font-size:12.5px;color:var(--muted);margin-bottom:18px}
+
+.bay-set{display:flex;flex-wrap:wrap;gap:26px}
+.bay-item{min-width:150px}
+.bay-blok{display:flex;gap:3px;margin-bottom:9px}
+.bay-unit{
+  width:26px;height:38px;border:1px solid var(--navy-line);
+  background:var(--navy);border-radius:2px;position:relative;
+}
+.bay-unit.isi{
+  background:linear-gradient(180deg,var(--brass),#8a6408);
+  border-color:var(--gold);
+}
+.bay-unit.separa{background:linear-gradient(180deg,var(--brass) 50%,var(--navy) 50%)}
+.bay-item .kapt{
+  font-family:var(--mono);font-size:10.5px;color:var(--muted);
+}
+.bay-item .kapt b{color:var(--cream);font-weight:500}
+
+/* ============================================================
+   JADUAL
+   ============================================================ */
+.bekas-jadual{
+  background:var(--navy-lift);border:1px solid var(--navy-line);
+  border-radius:var(--r);overflow:hidden;margin-bottom:26px;
+}
+.kepala-jadual{
+  padding:15px var(--pad);border-bottom:1px solid var(--navy-line);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.kepala-jadual h3{font-family:var(--serif);font-size:17px;font-weight:600}
+.kepala-jadual .kiraan{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+.skrol{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--brass);
+  text-align:left;padding:11px var(--pad);
+  border-bottom:1px solid var(--navy-line);white-space:nowrap;
+  background:var(--abyss);
+}
+td{padding:11px var(--pad);border-bottom:1px solid rgba(30,64,102,.42)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(184,134,11,.05)}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+td.pos{color:var(--oren);font-weight:600}
+
+.tag{
+  display:inline-block;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.06em;padding:2px 7px;border-radius:2px;
+  border:1px solid currentColor;white-space:nowrap;
+}
+.tag.tolak{color:var(--merah)}
+.tag.semak{color:var(--kuning)}
+.tag.sah{color:var(--hijau)}
+.tag.info{color:var(--muted)}
+
+/* ============================================================
+   PANEL ADMIN
+   ============================================================ */
+.tab-bar{display:flex;gap:2px;border-bottom:1px solid var(--navy-line);margin-bottom:22px;flex-wrap:wrap}
+.tab-bar button{
+  background:none;border:none;color:var(--muted);
+  padding:10px 16px;font-size:13.5px;font-weight:500;
+  border-bottom:2px solid transparent;
+}
+.tab-bar button.aktif{color:var(--gold);border-bottom-color:var(--brass);font-weight:600}
+.tab{display:none}
+.tab.aktif{display:block}
+
+.baris-cfg{
+  display:grid;grid-template-columns:1fr 118px;gap:14px;
+  align-items:center;padding:12px 0;
+  border-bottom:1px solid rgba(30,64,102,.42);
+}
+.baris-cfg .kunci{font-family:var(--mono);font-size:12px;color:var(--cream)}
+.baris-cfg .ket{font-size:12px;color:var(--muted);margin-top:3px}
+.baris-cfg .sumber{font-family:var(--mono);font-size:10px;color:var(--brass);margin-top:3px}
+.baris-cfg .sumber.belum{color:var(--oren)}
+.baris-cfg input{
+  background:var(--abyss);border:1px solid var(--navy-line);
+  color:var(--cream);font-family:var(--mono);font-size:13px;
+  padding:8px 10px;border-radius:var(--r);width:100%;text-align:right;
+}
+.baris-cfg input:focus{border-color:var(--brass);outline:none}
+.baris-cfg input.ubah{border-color:var(--gold);background:rgba(212,175,55,.07)}
+
+.btn{
+  background:var(--brass);color:#0A1B2E;border:none;
+  padding:10px 19px;border-radius:var(--r);
+  font-size:13.5px;font-weight:700;letter-spacing:.02em;transition:.16s;
+}
+.btn:hover{background:var(--gold)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.garis{background:none;border:1px solid var(--navy-line);color:var(--cream)}
+.btn.garis:hover{border-color:var(--brass);color:var(--gold);background:none}
+.btn.bahaya{background:none;border:1px solid var(--merah);color:var(--merah)}
+.btn.bahaya:hover{background:var(--merah);color:#fff}
+.set-btn{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+
+.kotak-nota{
+  background:rgba(184,134,11,.075);border-left:2px solid var(--brass);
+  padding:14px 17px;border-radius:0 var(--r) var(--r) 0;
+  font-size:13px;color:var(--cream);margin:18px 0;line-height:1.62;
+}
+.kotak-nota strong{color:var(--gold)}
+
+/* ---------- PLACEHOLDER FASA ---------- */
+.belum-bina{
+  border:1px dashed var(--navy-line);border-radius:var(--r);
+  padding:46px 30px;text-align:center;background:rgba(8,23,42,.45);
+}
+.belum-bina .fasa-tag{
+  display:inline-block;font-family:var(--mono);font-size:10px;
+  letter-spacing:.14em;color:var(--brass);border:1px solid var(--brass);
+  padding:3px 10px;border-radius:2px;margin-bottom:16px;text-transform:uppercase;
+}
+.belum-bina h3{font-family:var(--serif);font-size:20px;font-weight:600;margin-bottom:9px}
+.belum-bina p{color:var(--muted);font-size:13.5px;max-width:52ch;margin:0 auto}
+
+.memuat{padding:50px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:12px}
+.ralat{
+  background:rgba(220,38,38,.1);border-left:2px solid var(--merah);
+  padding:15px 18px;border-radius:0 var(--r) var(--r) 0;font-size:13px;
+}
+.ralat strong{color:var(--merah);display:block;margin-bottom:5px}
+
+/* ============================================================
+   RESPONSIF
+   ============================================================ */
+@media(max-width:860px){
+  .rangka{flex-direction:column}
+  aside{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--navy-line)}
+  .jata{padding:18px}
+  .jata h1{font-size:18px}
+  nav{display:flex;overflow-x:auto;padding:9px;gap:3px}
+  nav button{white-space:nowrap;padding:8px 13px;border-left:none;border-bottom:2px solid transparent}
+  nav button.aktif{border-left:none;border-bottom-color:var(--brass)}
+  nav button .num,nav .fasa{display:none}
+  .sidebar-kaki{display:none}
+  main{padding:20px 16px 46px}
+  .tajuk-halaman h2{font-size:23px}
+  .baris-cfg{grid-template-columns:1fr;gap:9px}
+  .baris-cfg input{text-align:left}
+  th,td{padding:10px 14px}
+  body::before{background-image:none}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<div id="banner-demo">⚠ Mod Demo Aktif — data yang dipapar adalah data ujian, bukan data sebenar</div>
+
+<div class="rangka">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside>
+    <div class="jata">
+      <div class="eyebrow">JPN Kedah · S4PD</div>
+      <h1>Kepadatan<br>Bilik Darjah</h1>
+      <div class="versi" id="lbl-versi">v1.0 · Fasa 1</div>
+    </div>
+
+    <nav id="nav"></nav>
+
+    <div class="sidebar-kaki">
+      <span class="lampu" id="lampu"></span>
+      <span id="lbl-sambungan">Menyambung…</span>
+    </div>
+  </aside>
+
+  <!-- ================= KANDUNGAN ================= -->
+  <main>
+
+    <!-- ---------- DASHBOARD ---------- -->
+    <section class="halaman aktif" id="hal-dashboard">
+      <div class="tajuk-halaman">
+        <div class="eyebrow">Peringkat Negeri</div>
+        <h2>Dashboard Kedah</h2>
+        <p>Kiraan asas daripada data EMIS dan enrolmen. Metrik kepadatan (KU, IRM, band) akan muncul di sini selepas enjin pengiraan Fasa 3 siap.</p>
+      </div>
+      <div id="isi-dashboard"><div class="memuat">Memuatkan data…</div></div>
+    </section>
+
+    <!-- ---------- KEUTAMAAN ---------- -->
+    <section class="halaman" id="hal-keutamaan">
+      <div class="tajuk-halaman">
+        <div class="eyebrow">Susunan Tindakan</div>
+        <h2>Senarai Keutamaan</h2>
+        <p>Sekolah tersusun mengikut skor keutamaan bertimbang, dipapar bersebelahan komponennya.</p>
+      </div>
+      <div class="belum-bina">
+        <div class="fasa-tag">Fasa 7</div>
+        <h3>Menunggu enjin kepadatan</h3>
+        <p>Skor keutamaan memerlukan bilangan murid terjejas, defisit bilik, dan kiraan kelas kritikal — kesemuanya datang daripada Fasa 3.</p>
+      </div>
+    </section>
+
+    <!-- ---------- BUTIRAN SEKOLAH ---------- -->
+    <section class="halaman" id="hal-sekolah">
+      <div class="tajuk-halaman">
+        <div class="eyebrow">Peringkat Sekolah</div>
+        <h2>Butiran Sekolah</h2>
+        <p>Semua kelas satu sekolah dengan band kepadatan, faktor kekangan, dan cadangan tindakan.</p>
+      </div>
+      <div class="belum-bina">
+        <div class="fasa-tag">Fasa 4</div>
+        <h3>Menunggu enjin kepadatan</h3>
+        <p>Halaman ini akan memaparkan setiap kelas dengan pengukur bay, KU, dan cadangan tindakan automatik.</p>
+      </div>
+    </section>
+
+    <!-- ---------- SEMAKAN BANTUAN ---------- -->
+    <section class="halaman" id="hal-semakan">
+      <div class="tajuk-halaman">
+        <div class="eyebrow">Kualiti Data</div>
+        <h2>Senarai Semakan Bantuan</h2>
+        <p>Semasa mod demo, halaman ini memaparkan manifes anomali yang disuntik sengaja — rujukan untuk mengesahkan enjin validasi Fasa 2 benar-benar menangkap setiap kes.</p>
+      </div>
+      <div id="isi-semakan"><div class="memuat">Memuatkan manifes…</div></div>
+    </section>
+
+    <!-- ---------- PANEL ADMIN ---------- -->
+    <section class="halaman" id="hal-admin">
+      <div class="tajuk-halaman">
+        <div class="eyebrow">Tetapan Sistem</div>
+        <h2>Panel Admin</h2>
+        <p>Semua norma, ambang, band, dan pemberat disimpan dalam sheet CONFIG. Tiada nilai keras dalam kod.</p>
+      </div>
+
+      <div class="tab-bar" id="tab-bar">
+        <button class="aktif" data-tab="NORMA">Norma &amp; Kapasiti</button>
+        <button data-tab="AMBANG">Ambang Validasi</button>
+        <button data-tab="BAND">Band Kepadatan</button>
+        <button data-tab="PEMBERAT">Pemberat Keutamaan</button>
+        <button data-tab="DEMO">Data Demo</button>
+      </div>
+
+      <div class="tab aktif" id="tab-NORMA"></div>
+      <div class="tab" id="tab-AMBANG"></div>
+      <div class="tab" id="tab-BAND"></div>
+      <div class="tab" id="tab-PEMBERAT"></div>
+
+      <div class="tab" id="tab-DEMO">
+        <div class="kotak-nota">
+          <strong>Mengapa mod demo penting.</strong>
+          Data demo menyuntik ~36 anomali yang diketahui, satu set untuk setiap ujian validasi.
+          Enjin Fasa 2 dianggap lulus hanya apabila ia menangkap kesemuanya tanpa satu pun positif palsu
+          pada rekod bersih. Tanpa manifes ini, kita cuma boleh kata sistem “nampak okey”.
+        </div>
+        <div class="kotak-nota">
+          <strong>Pembetulan tidak akan hilang.</strong>
+          Mengosongkan data demo hanya membuang baris berawalan <code>DEMO-</code>.
+          Sheet <code>PEMBETULAN</code> tidak pernah diganti oleh refresh EMIS —
+          <code>Luas_Berkuasa</code> sentiasa mengutamakan pembetulan.
+        </div>
+        <div class="set-btn">
+          <button class="btn" id="btn-jana">Jana data demo</button>
+          <button class="btn garis" id="btn-muat">Muat semula data</button>
+          <button class="btn bahaya" id="btn-kosong">Kosongkan data demo</button>
+        </div>
+        <div id="status-demo" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <!-- ---------- EKSPORT ---------- -->
+    <section class="halaman" id="hal-eksport">
+      <div class="tajuk-halaman">
+        <div class="eyebrow">Laporan</div>
+        <h2>Eksport</h2>
+        <p>Laporan PDF dan CSV mengikut PPD atau peringkat negeri.</p>
+      </div>
+      <div class="belum-bina">
+        <div class="fasa-tag">Fasa 7</div>
+        <h3>Menunggu enjin kepadatan</h3>
+        <p>Eksport akan merangkumi band kepadatan, cadangan tindakan, dan asas rekod sah bagi setiap KPI.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   TETAPAN — tampal URL deployment Google Apps Script di sini
+   ============================================================ */
+const API_URL = 'TAMPAL_URL_GAS_DI_SINI';
+
+const HALAMAN = [
+  { id:'dashboard', label:'Dashboard Negeri',        fasa:'F1' },
+  { id:'keutamaan', label:'Senarai Keutamaan',       fasa:'F7' },
+  { id:'sekolah',   label:'Butiran Sekolah',         fasa:'F4' },
+  { id:'semakan',   label:'Senarai Semakan Bantuan', fasa:'F2' },
+  { id:'admin',     label:'Panel Admin',             fasa:'F1' },
+  { id:'eksport',   label:'Eksport',                 fasa:'F7' }
+];
+
+let DATA = null;
+let CONFIG = [];
+const ubahTertunda = {};
+
+/* ---------- NAVIGASI ---------- */
+function binaNav(){
+  const nav = document.getElementById('nav');
+  HALAMAN.forEach(function(h,i){
+    const b = document.createElement('button');
+    b.innerHTML = '<span class="num">'+String(i+1).padStart(2,'0')+'</span>'+
+                  '<span>'+h.label+'</span>'+
+                  '<span class="fasa">'+h.fasa+'</span>';
+    b.className = i===0 ? 'aktif' : '';
+    b.onclick = function(){ tukarHalaman(h.id, b); };
+    nav.appendChild(b);
+  });
+}
+
+function tukarHalaman(id, btn){
+  document.querySelectorAll('.halaman').forEach(function(s){ s.classList.remove('aktif'); });
+  document.getElementById('hal-'+id).classList.add('aktif');
+  document.querySelectorAll('#nav button').forEach(function(b){ b.classList.remove('aktif'); });
+  if (btn) btn.classList.add('aktif');
+  window.scrollTo({top:0});
+}
+
+/* ---------- API ---------- */
+async function apiGet(tindakan){
+  const res = await fetch(API_URL+'?tindakan='+encodeURIComponent(tindakan));
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  return res.json();
+}
+
+async function apiPost(muatan){
+  // CORS: hantar sebagai text/plain untuk elak preflight
+  const res = await fetch(API_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(muatan)
+  });
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  return res.json();
+}
+
+function setSambungan(status, teks){
+  const l = document.getElementById('lampu');
+  l.className = 'lampu ' + status;
+  document.getElementById('lbl-sambungan').textContent = teks;
+}
+
+/* ---------- MUAT SEMUA ---------- */
+async function muatSemua(){
+  if (API_URL.indexOf('TAMPAL') === 0){
+    setSambungan('gagal','URL API belum ditetapkan');
+    const msg = '<div class="ralat"><strong>URL API belum ditetapkan</strong>'+
+      'Buka index.html, cari <code>API_URL</code> pada permulaan blok script, '+
+      'dan tampal URL deployment Google Apps Script.</div>';
+    document.getElementById('isi-dashboard').innerHTML = msg;
+    document.getElementById('isi-semakan').innerHTML = msg;
+    return;
+  }
+
+  try{
+    setSambungan('','Memuatkan…');
+    const [ringkasan, cfg] = await Promise.all([apiGet('ringkasan'), apiGet('config')]);
+
+    if(!ringkasan.ok) throw new Error(ringkasan.mesej || 'Gagal memuatkan ringkasan');
+
+    DATA = ringkasan;
+    CONFIG = cfg.ok ? cfg.config : [];
+
+    document.getElementById('banner-demo').classList.toggle('on', DATA.mod_demo === true);
+    document.getElementById('lbl-versi').textContent = 'v' + (DATA.versi || '1.0');
+    setSambungan('ok','Bersambung');
+
+    lukisDashboard();
+    lukisSemakan();
+    lukisConfig();
+
+  }catch(e){
+    setSambungan('gagal','Sambungan gagal');
+    const msg = '<div class="ralat"><strong>Tidak dapat memuatkan data</strong>'+
+      e.message+'<br><br>Semak: deployment GAS ditetapkan kepada “Anyone”, '+
+      'dan <code>setupSistem()</code> sudah dijalankan.</div>';
+    document.getElementById('isi-dashboard').innerHTML = msg;
+    document.getElementById('isi-semakan').innerHTML = msg;
+  }
+}
+
+/* ---------- DASHBOARD ---------- */
+function lukisDashboard(){
+  const k = DATA.kpi;
+  const kadar = k.bilik ? (100 - Number(k.pct_luas_kosong)).toFixed(1) : 0;
+
+  let html = '<div class="grid-kpi">'+
+    kad('Sekolah', k.sekolah, '', '') +
+    kad('Kelas', k.kelas, '', 'Daripada data enrolmen') +
+    kad('Bilik darjah', k.bilik, '', 'Kod EMIS S102 sahaja') +
+    kad('Jumlah murid', fmt(k.enrolmen), '', '') +
+    kad('Kelengkapan luas', kadar, '%', k.luas_kosong+' rekod luas kosong',
+        Number(kadar) < 95) +
+    kad('Sekolah defisit bilik', k.sekolah_defisit, '',
+        'Jumlah defisit '+k.jumlah_defisit+' bilik', k.sekolah_defisit > 0) +
+  '</div>';
+
+  html += panelBay();
+
+  html += '<div class="bekas-jadual"><div class="kepala-jadual">'+
+    '<h3>Taburan mengikut PPD</h3>'+
+    '<span class="kiraan">'+DATA.ppd.length+' PPD</span></div>'+
+    '<div class="skrol"><table><thead><tr>'+
+    '<th>PPD</th><th>Sekolah</th><th>Kelas</th><th>Bilik S102</th>'+
+    '<th>Defisit</th><th>Murid</th></tr></thead><tbody>';
+
+  DATA.ppd.forEach(function(p){
+    html += '<tr><td>'+p.ppd+'</td>'+
+      '<td class="num">'+p.sekolah+'</td>'+
+      '<td class="num">'+p.kelas+'</td>'+
+      '<td class="num">'+p.bilik+'</td>'+
+      '<td class="num'+(p.defisit>0?' pos':'')+'">'+(p.defisit>0?'+'+p.defisit:'—')+'</td>'+
+      '<td class="num">'+fmt(p.enrolmen)+'</td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+
+  html += '<div class="kotak-nota"><strong>Nota kejujuran data.</strong> '+
+    'Setiap KPI di atas adalah kiraan mentah tanpa penapisan validasi — '+
+    'rekod bermasalah masih dikira. Selepas Fasa 2, rekod berstatus TOLAK akan '+
+    'dikecualikan daripada semua agregat, dan setiap kad akan memaparkan asas rekod sahnya.</div>';
+
+  document.getElementById('isi-dashboard').innerHTML = html;
+}
+
+function kad(label, angka, unit, sub, amaran){
+  return '<div class="kad'+(amaran?' amaran':'')+'">'+
+    '<div class="label">'+label+'</div>'+
+    '<div class="angka'+(String(angka).length>5?' kecil':'')+'">'+angka+
+    (unit?'<span class="unit">'+unit+'</span>':'')+'</div>'+
+    (sub?'<div class="sub">'+sub+'</div>':'')+'</div>';
+}
+
+/* ---------- SIGNATURE: PENGUKUR BAY ---------- */
+function panelBay(){
+  const contoh = [
+    { luas:67.5,  label:'Standard' },
+    { luas:90,    label:'4 bay' },
+    { luas:56.25, label:'2.5 bay' },
+    { luas:45,    label:'2 bay' }
+  ];
+  const perBay = nilaiCfg('LUAS_PER_BAY', 22.5);
+
+  let html = '<div class="panel-bay"><h3>Bilik darjah dalam unit bay</h3>'+
+    '<div class="nota">Satu bay = '+perBay+' m². Bilik standard 3 bay = '+
+    (perBay*3).toFixed(1)+' m². Bahasa yang sama digunakan oleh JKR dan '+
+    'pihak pembangunan, jadi ia lebih mudah dipertahankan dalam mesyuarat '+
+    'berbanding perpuluhan m².</div><div class="bay-set">';
+
+  contoh.forEach(function(c){
+    const bay = c.luas / perBay;
+    const penuh = Math.floor(bay + 1e-9);
+    const ada = Math.abs(bay - penuh) > 0.01;
+    let blok = '';
+    for(let i=0;i<4;i++){
+      const kelas = i < penuh ? 'isi' : (i === penuh && ada ? 'separa' : '');
+      blok += '<div class="bay-unit '+kelas+'"></div>';
+    }
+    html += '<div class="bay-item"><div class="bay-blok">'+blok+'</div>'+
+      '<div class="kapt"><b>'+c.luas+' m²</b> · '+bay.toFixed(2)+' bay<br>'+c.label+'</div></div>';
+  });
+
+  return html + '</div></div>';
+}
+
+/* ---------- SEMAKAN BANTUAN ---------- */
+function lukisSemakan(){
+  const m = DATA.manifes || [];
+
+  if(!m.length){
+    document.getElementById('isi-semakan').innerHTML =
+      '<div class="belum-bina"><div class="fasa-tag">Fasa 2</div>'+
+      '<h3>Tiada manifes demo</h3>'+
+      '<p>Jana data demo dari Panel Admin untuk melihat senarai anomali yang '+
+      'disuntik sengaja, atau tunggu enjin validasi Fasa 2 untuk senarai sebenar.</p></div>';
+    return;
+  }
+
+  // Kumpul mengikut ujian
+  const ikutUjian = {};
+  m.forEach(function(a){ ikutUjian[a.ujian] = (ikutUjian[a.ujian]||0)+1; });
+
+  let html = '<div class="grid-kpi">';
+  Object.keys(ikutUjian).sort().forEach(function(u){
+    html += kad(u, ikutUjian[u], '', 'kes ujian disuntik');
+  });
+  html += '</div>';
+
+  html += '<div class="kotak-nota"><strong>Manifes ini adalah kunci jawapan.</strong> '+
+    'Enjin validasi Fasa 2 dianggap lulus apabila setiap baris di bawah ditangkap oleh '+
+    'ujian yang dijangka, dan tiada rekod bersih ditandakan secara tersilap.</div>';
+
+  html += '<div class="bekas-jadual"><div class="kepala-jadual">'+
+    '<h3>Anomali disuntik</h3><span class="kiraan">'+m.length+' rekod</span></div>'+
+    '<div class="skrol"><table><thead><tr>'+
+    '<th>Rujukan</th><th>Jenis anomali</th><th>Ujian dijangka</th>'+
+    '<th>Nilai disuntik</th><th>Sepatutnya</th><th>Catatan</th>'+
+    '</tr></thead><tbody>';
+
+  m.forEach(function(a){
+    const kelasTag = a.ujian.indexOf('U1')===0 ? 'tolak' :
+                     (a.ujian==='KOSONG'||a.ujian==='DEFISIT') ? 'info' : 'semak';
+    html += '<tr>'+
+      '<td style="font-family:var(--mono);font-size:12px">'+a.id+'</td>'+
+      '<td>'+a.jenis+'</td>'+
+      '<td><span class="tag '+kelasTag+'">'+a.ujian+'</span></td>'+
+      '<td class="num">'+a.disuntik+'</td>'+
+      '<td class="num" style="color:var(--muted)">'+a.sepatutnya+'</td>'+
+      '<td style="color:var(--muted);font-size:12.5px">'+(a.catatan||'—')+'</td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+
+  document.getElementById('isi-semakan').innerHTML = html;
+}
+
+/* ---------- PANEL CONFIG ---------- */
+function nilaiCfg(kunci, lalai){
+  const c = CONFIG.filter(function(x){ return x.kunci===kunci; })[0];
+  return c ? c.nilai : lalai;
+}
+
+function lukisConfig(){
+  ['NORMA','AMBANG','BAND','PEMBERAT'].forEach(function(kumpulan){
+    const senarai = CONFIG.filter(function(c){ return c.kumpulan===kumpulan; });
+    const bekas = document.getElementById('tab-'+kumpulan);
+
+    if(!senarai.length){
+      bekas.innerHTML = '<div class="memuat">Tiada tetapan dalam kumpulan ini.</div>';
+      return;
+    }
+
+    let html = '';
+    if(kumpulan==='NORMA'){
+      html += '<div class="kotak-nota"><strong>Fasa 0 belum selesai.</strong> '+
+        'Nilai bertanda <em>BELUM DISAHKAN</em> adalah anggaran kerja sahaja. '+
+        'Ia tidak boleh digunakan dalam laporan kepada pengurusan sebelum disahkan '+
+        'dengan spesifikasi JKR atau pekeliling KPM yang berkuat kuasa.</div>';
+    }
+    if(kumpulan==='PEMBERAT'){
+      html += '<div class="kotak-nota"><strong>Pemberat ini menyusun keutamaan tindakan, '+
+        'bukan menilai kesihatan sekolah.</strong> Skor kesihatan komposit tunggal '+
+        'menyembunyikan punca — dua sekolah boleh skor sama dengan masalah yang '+
+        'bertentangan sepenuhnya. Skor keutamaan pula menjawab soalan sebenar: apa dahulu?</div>';
+    }
+
+    senarai.forEach(function(c){
+      const belum = String(c.sumber||'').indexOf('BELUM') === 0 ||
+                    String(c.sumber||'').indexOf('(?)') >= 0;
+      html += '<div class="baris-cfg">'+
+        '<div><div class="kunci">'+c.kunci+'</div>'+
+        '<div class="ket">'+(c.keterangan||'')+'</div>'+
+        '<div class="sumber'+(belum?' belum':'')+'">'+(c.sumber||'—')+'</div></div>'+
+        '<div><input type="text" value="'+c.nilai+'" data-kunci="'+c.kunci+'" '+
+        'oninput="tandaUbah(this)"></div></div>';
+    });
+
+    html += '<div class="set-btn"><button class="btn" onclick="simpanConfig(\''+kumpulan+'\')">'+
+            'Simpan perubahan</button>'+
+            '<button class="btn garis" onclick="muatSemua()">Buang perubahan</button></div>'+
+            '<div id="status-'+kumpulan+'" style="margin-top:14px"></div>';
+
+    bekas.innerHTML = html;
+  });
+}
+
+function tandaUbah(el){
+  const asal = nilaiCfg(el.dataset.kunci, '');
+  const berubah = String(asal) !== el.value;
+  el.classList.toggle('ubah', berubah);
+  if(berubah) ubahTertunda[el.dataset.kunci] = el.value;
+  else delete ubahTertunda[el.dataset.kunci];
+}
+
+async function simpanConfig(kumpulan){
+  const status = document.getElementById('status-'+kumpulan);
+  const kunci = Object.keys(ubahTertunda);
+
+  if(!kunci.length){
+    status.innerHTML = '<span style="color:var(--muted);font-size:13px">'+
+                       'Tiada perubahan untuk disimpan.</span>';
+    return;
+  }
+
+  status.innerHTML = '<span style="color:var(--muted);font-size:13px">Menyimpan…</span>';
+  let berjaya = 0, gagal = [];
+
+  for(const k of kunci){
+    let v = ubahTertunda[k];
+    if(v !== '' && !isNaN(v)) v = Number(v);
+    else if(v==='TRUE'||v==='true') v = true;
+    else if(v==='FALSE'||v==='false') v = false;
+
+    try{
+      const r = await apiPost({tindakan:'setConfig', kunci:k, nilai:v, oleh:'ADMIN'});
+      if(r.ok) berjaya++; else gagal.push(k);
+    }catch(e){ gagal.push(k); }
+  }
+
+  status.innerHTML = '<span style="color:var(--hijau);font-size:13px">'+
+    berjaya+' tetapan disimpan.</span>'+
+    (gagal.length ? '<span style="color:var(--merah);font-size:13px"> Gagal: '+
+     gagal.join(', ')+'</span>' : '');
+
+  Object.keys(ubahTertunda).forEach(function(k){ delete ubahTertunda[k]; });
+  setTimeout(muatSemua, 900);
+}
+
+/* ---------- TAB ADMIN ---------- */
+document.getElementById('tab-bar').addEventListener('click', function(e){
+  const b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#tab-bar button').forEach(function(x){ x.classList.remove('aktif'); });
+  b.classList.add('aktif');
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('aktif'); });
+  document.getElementById('tab-'+b.dataset.tab).classList.add('aktif');
+});
+
+/* ---------- KAWALAN DEMO ---------- */
+document.getElementById('btn-jana').onclick = async function(){
+  const s = document.getElementById('status-demo');
+  this.disabled = true;
+  s.innerHTML = '<span style="color:var(--muted);font-size:13px">Menjana data demo…</span>';
+  try{
+    const r = await apiPost({tindakan:'janaDemo', bilSekolah:30});
+    if(r.ok){
+      s.innerHTML = '<span style="color:var(--hijau);font-size:13px">'+
+        'Siap — '+r.sekolah+' sekolah · '+r.kelas+' kelas · '+r.bilik+' bilik · '+
+        r.anomali+' anomali ('+r.pct_anomali+'% daripada rekod).</span>';
+      setTimeout(muatSemua, 700);
+    } else {
+      s.innerHTML = '<div class="ralat"><strong>Gagal</strong>'+(r.mesej||'')+'</div>';
+    }
+  }catch(e){
+    s.innerHTML = '<div class="ralat"><strong>Gagal</strong>'+e.message+'</div>';
+  }
+  this.disabled = false;
+};
+
+document.getElementById('btn-kosong').onclick = async function(){
+  if(!confirm('Kosongkan semua data demo?\n\nHanya baris berawalan DEMO- akan dibuang. Data sebenar tidak tersentuh.')) return;
+  const s = document.getElementById('status-demo');
+  this.disabled = true;
+  s.innerHTML = '<span style="color:var(--muted);font-size:13px">Mengosongkan…</span>';
+  try{
+    const r = await apiPost({tindakan:'kosongkanDemo'});
+    s.innerHTML = r.ok
+      ? '<span style="color:var(--hijau);font-size:13px">'+r.dibuang+' baris demo dibuang.</span>'
+      : '<div class="ralat"><strong>Gagal</strong>'+(r.mesej||'')+'</div>';
+    if(r.ok) setTimeout(muatSemua, 700);
+  }catch(e){
+    s.innerHTML = '<div class="ralat"><strong>Gagal</strong>'+e.message+'</div>';
+  }
+  this.disabled = false;
+};
+
+document.getElementById('btn-muat').onclick = muatSemua;
+
+/* ---------- UTILITI ---------- */
+function fmt(n){ return Number(n||0).toLocaleString('ms-MY'); }
+
+/* ---------- MULA ---------- */
+binaNav();
+muatSemua();
+</script>
+</body>
+</html>
